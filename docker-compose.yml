@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  dupyter:
+    build:
+      context: .
+      args:
+        http_proxy: "http://proxy.rdh.ecl.ntt.co.jp:20066"
+        https_proxy: "http://proxy.rdh.ecl.ntt.co.jp:20066"
