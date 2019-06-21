@@ -1,0 +1,100 @@
+#!/bin/bash
+
+PROXY="http://129.60.39.43:20066/"
+
+DOCKER_HUB=${DOCKER_HUB:-"matsuura0831/dupyter"}
+PORT_ST=6000
+PORT_EN=7000
+MAX_WAIT=10
+
+MODE="run"
+
+usage_exit() {
+  echo "Usage: $0 -t tag [-p port] [-m mode(${MODE})] [-v src:dst]"
+  echo "image list: https://hub.docker.com/r/${DOCKER_HUB}/tags"
+  exit 1
+}
+
+PORT=""
+VOLUMES=""
+
+while getopts t:m:p:v:h OPT; do
+  case $OPT in 
+    t ) TAG="$OPTARG" ;;
+    m ) MODE="$OPTARG" ;;
+    p ) PORT="$OPTARG" ;;
+    h ) usage_exit ;;
+  esac
+done
+
+if [ "${TAG}" == "" ]; then
+  usage_exit
+fi
+
+USER=$(whoami)
+DOCKER_NAME=dupyter_${USER}_${TAG}
+DOCKER_IMAGE=${DOCKER_HUB}:${TAG}
+
+if [ "${PORT}" == "" ]; then
+  for PORT in $(seq ${PORT_ST} ${PORT_EN}); do
+    nc -z localhost ${PORT}
+
+    if [ $? == 1 ]; then
+      break
+    fi
+  done
+fi
+
+if [ $(docker ps | grep -e ${DOCKER_NAME} | wc -l) != 0 ]; then
+  IS_RUNNING=1
+else
+  IS_RUNNING=0
+fi
+
+echo $DOCKER_NAME $DOCKER_IMAGE $IS_RUNNING $PORT
+
+case $MODE in
+  "run" )
+    echo "RUN"
+    if [ $IS_RUNNING == 0 ]; then
+      docker run --rm -d -it -p ${PORT}:8888 -v "${PWD}:/workspace" ${VOLUMES} -e AUTH=${AUTH} \
+        --name ${DOCKER_NAME} ${DOCKER_IMAGE} /entrypoint.sh
+    fi
+
+    if [ "${AUTH}" != "0" ]; then
+      for ((i=0; i < ${MAX_WAIT}; i++)); do
+        TOKEN=$(docker logs ${DOCKER_NAME} | grep -e "/?token=" | grep -v "NotebookApp]")
+        TOKEN=$(echo ${TOKEN} | sed -r 's|^http://.+?token=(.+)|\1|g')
+
+        if [ "${TOKEN}" != "" ]; then
+          TOKEN="?token=${TOKEN}"
+          break
+        fi
+        sleep 1s
+      done
+    else
+      TOKEN=""
+    fi
+
+    echo "Please access."
+
+    ADDRS=('localhost' $(ip -4 -o addr show scope global | awk '{gsub(/\/.*/,"",$4); print $4}'))
+    for ((i = 0; i < ${#ADDRS[@]}; i++)) {
+      addr=${ADDRS[$i]}
+      echo "  ${i}. http://${addr}:${PORT}/${token}"
+    }
+    ;;
+
+  "stop" )
+    echo "STOP"
+    if [ "${MODE}" == "stop" ]; then
+      if [ $IS_RUNNING ]; then
+        echo "Stop ${DOCKER_NAME}"
+        docker stop ${DOCKER_NAME} > /dev/null
+      fi
+    fi
+    ;;
+
+  * ) echo "Use: -t (run|stop)"
+esac
+
