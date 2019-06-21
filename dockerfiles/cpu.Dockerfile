@@ -7,10 +7,7 @@ FROM ubuntu:${UBUNTU}
 ENV PATH ${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}
 
 RUN apt-get update && \
-  apt-get install -y git aria2 curl wget bzip2 \
-    graphviz python-opengl \
-    fonts-ipafont fonts-ipaexfont \
-    xvfb && \
+  apt-get install -y git fonts-ipafont fonts-ipaexfont xvfb && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
