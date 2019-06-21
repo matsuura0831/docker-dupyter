@@ -1,0 +1,17 @@
+docopt
+python-dotenv
+
+tensorflow
+keras
+pydot
+pydot_ng
+
+opencv-python
+
+SQLAlchemy
+psycopg2-binary
+
+gym
+gym[atari]
+pygame
+tqdm
