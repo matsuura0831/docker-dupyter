@@ -1,9 +1,10 @@
-FROM ubuntu:18.04
+ARG UBUNTU=18.04
+ARG ANACONDA_VERSION=anaconda3-5.3.1
+ARG PYENV_ROOT=/opt/pyenv
 
-ENV PYENV_ROOT /opt/pyenv
+FROM ubuntu:${UBUNTU}
+
 ENV PATH ${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}
-
-ENV ANACONDA_VERSION anaconda3-5.3.1
 
 RUN apt-get update && \
   apt-get install -y git aria2 curl wget bzip2 \
