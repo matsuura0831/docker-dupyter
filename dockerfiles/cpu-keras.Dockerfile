@@ -9,7 +9,9 @@ RUN apt-get update && \
 
 # install anaconda and jupyter library
 RUN eval "$(pyenv init -)" && \
-  conda create -y -n keras python=3.5 anaconda && \
+  conda create -y -n keras python=3.7 anaconda && \
+  pyenv activate keras && \
+    pip install --upgrade pip && \
     pip install tensorflow-cpu && \
     pip install -r /keras.requirements.txt && \
   pyenv deactivate
