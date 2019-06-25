@@ -1,7 +1,7 @@
 docopt
 python-dotenv
+tqdm
 
-tensorflow
 keras
 pydot
 pydot_ng
@@ -10,8 +10,3 @@ opencv-python
 
 SQLAlchemy
 psycopg2-binary
-
-gym
-gym[atari]
-pygame
-tqdm
