@@ -1,7 +1,5 @@
 #!/bin/bash
 
-PROXY="http://129.60.39.43:20066/"
-
 DOCKER_HUB=${DOCKER_HUB:-"matsuura0831/dupyter"}
 PORT_ST=6000
 PORT_EN=7000
