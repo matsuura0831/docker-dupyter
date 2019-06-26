@@ -1,0 +1,8 @@
+docopt
+python-dotenv
+tqdm
+
+opencv-python
+
+SQLAlchemy
+psycopg2-binary

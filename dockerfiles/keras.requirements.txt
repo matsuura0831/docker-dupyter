@@ -1,12 +1,3 @@
-docopt
-python-dotenv
-tqdm
-
 keras
 pydot
 pydot_ng
-
-opencv-python
-
-SQLAlchemy
-psycopg2-binary
