@@ -35,4 +35,6 @@ RUN echo "c.NotebookApp.kernel_spec_manager_class='environment_kernels.Environme
 
 ADD ./entrypoint.sh /entrypoint.sh
 
+WORKDIR /workspace
+
 CMD ["/bin/bash", "/entrypoint.sh"]
