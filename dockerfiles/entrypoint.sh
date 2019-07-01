@@ -9,6 +9,8 @@ if [ "$FLAG_AUTH" == "0" ]; then
   echo "c.NotebookApp.password = ''" >> $CONF
 fi
 
+eval "$(pyenv init -)"
+
 jupyter nbextension enable --py --sys-prefix widgetsnbextension
 
 xvfb-run -s "-screen 0 1400x900x24" \

@@ -14,7 +14,7 @@ RUN eval "$(pyenv init -)" && \
   conda create -y -n tf python=${PYTHON_VERSION} anaconda && \
   pyenv activate tf && \
     pip install --upgrade pip && \
-    pip install tensorflow-cpu && \
+    pip install tensorflow && \
     pip install -r /base.requirements.txt  && \
   pyenv deactivate && \
   conda create -y -n keras --clone tf && \
