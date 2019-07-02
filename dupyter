@@ -5,43 +5,54 @@ PORT_ST=6000
 PORT_EN=7000
 MAX_WAIT=10
 
-MODE="run"
+MODE=${MODE:-"start"}
+PORT=""
+AUTH=${AUTH:1}
+VOLUMES="-v ${PWD}:/workspace"
+FLAGS=""
 
 usage_exit() {
-  echo "Usage: $0 -t tag [-p port] [-m mode(${MODE})] [-v src:dst]"
+  echo "Usage: $0 -t tag [-p port] [-m mode(${MODE}) | --start | --stop] [-a auth(${AUTH}) | --noauth] [-v src:dst]"
   echo "image list: https://hub.docker.com/r/${DOCKER_HUB}/tags"
   exit 1
 }
 
-PORT=""
-VOLUMES=""
-
-while getopts t:m:p:v:h OPT; do
+while getopts t:m:p:v:a:-:h OPT; do
   case $OPT in 
     t ) TAG="$OPTARG" ;;
     m ) MODE="$OPTARG" ;;
     p ) PORT="$OPTARG" ;;
+    v ) VOLUMES="-v $OPTARG" ;;
+    a ) AUTH="$OPTARG" ;;
     h ) usage_exit ;;
+    - )
+      case $OPTARG in
+        start ) MODE="start" ;;
+        stop )  MODE="stop" ;;
+        noauth ) AUTH=0 ;;
+      esac ;;
   esac
 done
 
 if [ "${TAG}" == "" ]; then
   usage_exit
+elif [[ "${TAG}" =~ ^gpu- ]]; then
+  FLAGS="${FLAGS} --runtime=nvidia"
 fi
-
-USER=$(whoami)
-DOCKER_NAME=dupyter_${USER}_${TAG}
-DOCKER_IMAGE=${DOCKER_HUB}:${TAG}
 
 if [ "${PORT}" == "" ]; then
   for PORT in $(seq ${PORT_ST} ${PORT_EN}); do
     nc -z localhost ${PORT}
 
-    if [ $? == 1 ]; then
+    if [ $? == 1 ]; then # fail = no-listen
       break
     fi
   done
 fi
+
+USER=$(whoami)
+DOCKER_IMAGE=${DOCKER_HUB}:${TAG}
+DOCKER_NAME=dupyter_${USER}_${TAG}_${PORT}
 
 if [ $(docker ps | grep -e ${DOCKER_NAME} | wc -l) != 0 ]; then
   IS_RUNNING=1
@@ -52,11 +63,11 @@ fi
 echo $DOCKER_NAME $DOCKER_IMAGE $IS_RUNNING $PORT
 
 case $MODE in
-  "run" )
+  "start" )
     echo "RUN"
     if [ $IS_RUNNING == 0 ]; then
-      docker run --rm -d -it -p ${PORT}:8888 -v "${PWD}:/workspace" ${VOLUMES} -e AUTH=${AUTH} \
-        --name ${DOCKER_NAME} ${DOCKER_IMAGE} /entrypoint.sh
+      docker pull ${DOCKER_IMAGE}
+      docker run --rm -d -it -p ${PORT}:8888 ${VOLUMES} -e AUTH=${AUTH} ${FLAGS} --name ${DOCKER_NAME} ${DOCKER_IMAGE} /entrypoint.sh
     fi
 
     if [ "${AUTH}" != "0" ]; then
@@ -93,6 +104,6 @@ case $MODE in
     fi
     ;;
 
-  * ) echo "Use: -t (run|stop)"
+  * ) echo "Use: -m (start | stop)"
 esac
 
