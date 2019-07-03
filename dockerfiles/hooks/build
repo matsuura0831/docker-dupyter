@@ -1,0 +1,19 @@
+#!/bin/bash
+set -eu
+
+if [ "$DOCKERFILE_PATH" = "" ]; then
+  DOCKERFILE_PATH_ARG=""
+else
+  DOCKERFILE_PATH_ARG="-f $DOCKERFILE_PATH"
+fi
+
+if [[ "$DOCKER_TAG" =~ ^gpu ]]; then
+  BASE_MODE="gpu"
+else
+  BASE_MODE="cpu"
+fi
+
+docker build \
+  --build-arg BASE_TAG=${DOCKER_TAG} \
+  --build-arg BSSE_MODE=${BASE_MODE} \
+  ${DOCKERFILE_PATH_ARG} -t $IMAGE_NAME .
