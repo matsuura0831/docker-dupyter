@@ -2,6 +2,7 @@ ARG BASE_MODE="cpu"
 
 FROM matsuura0831/dupyter:${BASE_MODE}
 
+ARG BASE_MODE
 ARG PYTHON_VERSION="3.6"
 
 ADD base.requirements.txt /base.requirements.txt
