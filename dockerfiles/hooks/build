@@ -13,9 +13,7 @@ else
   BASE_MODE="cpu"
 fi
 
-echo "$DOCKER_TAG, $BASE_MODE"
-
 docker build \
   --build-arg BASE_TAG=${DOCKER_TAG} \
-  --build-arg BSSE_MODE=${BASE_MODE} \
+  --build-arg BASE_MODE=${BASE_MODE} \
   ${DOCKERFILE_PATH_ARG} -t $IMAGE_NAME .
