@@ -7,9 +7,8 @@ MAX_WAIT=10
 
 MODE=${MODE:-"start"}
 PORT=""
-AUTH=${AUTH:1}
-VOLUMES="-v ${PWD}:/workspace"
-FLAGS=""
+AUTH=${AUTH:-"1"}
+FLAGS="-v ${PWD}:/workspace"
 
 usage_exit() {
   echo "Usage: $0 -t tag [-p port] [-m mode(${MODE}) | --start | --stop] [-a auth(${AUTH}) | --noauth] [-v src:dst]"
@@ -22,14 +21,14 @@ while getopts t:m:p:v:a:-:h OPT; do
     t ) TAG="$OPTARG" ;;
     m ) MODE="$OPTARG" ;;
     p ) PORT="$OPTARG" ;;
-    v ) VOLUMES="-v $OPTARG" ;;
+    v ) FLAGS="${FLAGS} -v $OPTARG" ;;
     a ) AUTH="$OPTARG" ;;
     h ) usage_exit ;;
     - )
       case $OPTARG in
         start ) MODE="start" ;;
         stop )  MODE="stop" ;;
-        noauth ) AUTH=0 ;;
+        noauth ) AUTH="0" ;;
       esac ;;
   esac
 done
@@ -60,17 +59,20 @@ else
   IS_RUNNING=0
 fi
 
-echo $DOCKER_NAME $DOCKER_IMAGE $IS_RUNNING $PORT
+FLAGS="${FLAGS} -p ${PORT}:8888 -e AUTH=$AUTH --name ${DOCKER_NAME}"
+
+echo "name: $DOCKER_NAME, image: $DOCKER_IMAGE, runnning: $IS_RUNNING, auth: $AUTH, port: $PORT"
+echo "flags: $FLAGS"
 
 case $MODE in
   "start" )
     echo "RUN"
     if [ $IS_RUNNING == 0 ]; then
       docker pull ${DOCKER_IMAGE}
-      docker run --rm -d -it -p ${PORT}:8888 ${VOLUMES} -e AUTH=${AUTH} ${FLAGS} --name ${DOCKER_NAME} ${DOCKER_IMAGE} /entrypoint.sh
+      docker run --rm -d -it ${FLAGS} ${DOCKER_IMAGE} /entrypoint.sh
     fi
 
-    if [ "${AUTH}" != "0" ]; then
+    if [ "${AUTH}" == "1" ]; then
       for ((i=0; i < ${MAX_WAIT}; i++)); do
         TOKEN=$(docker logs ${DOCKER_NAME} | grep -e "/?token=" | grep -v "NotebookApp]")
         TOKEN=$(echo ${TOKEN} | sed -r 's|^http://.+?token=(.+)|\1|g')
@@ -90,7 +92,7 @@ case $MODE in
     ADDRS=('localhost' $(ip -4 -o addr show scope global | awk '{gsub(/\/.*/,"",$4); print $4}'))
     for ((i = 0; i < ${#ADDRS[@]}; i++)) {
       addr=${ADDRS[$i]}
-      echo "  ${i}. http://${addr}:${PORT}/${token}"
+      echo "  ${i}. http://${addr}:${PORT}/${TOKEN}"
     }
     ;;
 
