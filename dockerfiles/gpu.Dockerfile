@@ -1,13 +1,14 @@
+ARG CUDA=10.0
+ARG CUDNN=7
 ARG UBUNTU=18.04
+FROM nvidia/cuda:${CUDA}-cudnn${CUDNN}-runtime-ubuntu${UBUNTU}
 
-FROM ubuntu:${UBUNTU}
-
-ARG ANACONDA_VERSION=anaconda3-5.3.1
+ENV ANACONDA_VERSION anaconda3-5.3.1
 ENV PYENV_ROOT /opt/pyenv
 ENV PATH ${PYENV_ROOT}/bin:${PATH}
 
 RUN apt-get update && \
-  apt-get install -y wget git fonts-ipafont fonts-ipaexfont xvfb && \
+  apt-get install -y wget git fonts-ipafont fonts-ipaexfont xvfb bzip2 && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
