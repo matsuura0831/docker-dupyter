@@ -26,6 +26,7 @@ RUN eval "$(pyenv init -)" && \
 RUN eval "$(pyenv init -)" && \
   conda create -y -n keras --clone tf && \
   pyenv activate keras && \
+    pip install -r /base.requirements.txt && \
     pip install -r /keras.requirements.txt
 
 RUN eval "$(pyenv init -)" && \
