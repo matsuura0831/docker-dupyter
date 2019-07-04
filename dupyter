@@ -1,8 +1,8 @@
 #!/bin/bash
 
 DOCKER_HUB=${DOCKER_HUB:-"matsuura0831/dupyter"}
-PORT_ST=6000
-PORT_EN=7000
+PORT_ST=8000
+PORT_EN=9000
 MAX_WAIT=10
 
 MODE=${MODE:-"start"}
