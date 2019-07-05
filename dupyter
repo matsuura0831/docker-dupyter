@@ -11,18 +11,19 @@ AUTH=${AUTH:-"1"}
 FLAGS="-v ${PWD}:/workspace"
 
 usage_exit() {
-  echo "Usage: $0 -t tag [-p port] [-m mode(${MODE}) | --start | --stop] [-a auth(${AUTH}) | --noauth] [-v src:dst]"
+  echo "Usage: $0 -t tag [-p port] [-m mode(${MODE}) | --start | --stop] [-a auth(${AUTH}) | --noauth] [-v src:dst] [-g 0,1,2...]"
   echo "image list: https://hub.docker.com/r/${DOCKER_HUB}/tags"
   exit 1
 }
 
-while getopts t:m:p:v:a:-:h OPT; do
+while getopts t:m:p:v:a:g:-:h OPT; do
   case $OPT in 
     t ) TAG="$OPTARG" ;;
     m ) MODE="$OPTARG" ;;
     p ) PORT="$OPTARG" ;;
     v ) FLAGS="${FLAGS} -v $OPTARG" ;;
     a ) AUTH="$OPTARG" ;;
+    g ) FLAGS="-e NVIDIA_VISIBLE_DEVICES=$OPTARG" ;;
     h ) usage_exit ;;
     - )
       case $OPTARG in
