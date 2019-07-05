@@ -23,7 +23,7 @@ while getopts t:m:p:v:a:g:-:h OPT; do
     p ) PORT="$OPTARG" ;;
     v ) FLAGS="${FLAGS} -v $OPTARG" ;;
     a ) AUTH="$OPTARG" ;;
-    g ) FLAGS="-e NVIDIA_VISIBLE_DEVICES=$OPTARG" ;;
+    g ) FLAGS="${FLAGS} -e NVIDIA_VISIBLE_DEVICES=$OPTARG" ;;
     h ) usage_exit ;;
     - )
       case $OPTARG in
