@@ -8,7 +8,7 @@ ENV PYENV_ROOT /opt/pyenv
 ENV PATH ${PYENV_ROOT}/bin:${PATH}
 
 RUN apt-get update && \
-  apt-get install -y wget git fonts-ipafont fonts-ipaexfont xvfb bzip2 && \
+  apt-get install -y wget git fonts-ipafont fonts-ipaexfont xvfb bzip2 python-opengl && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
