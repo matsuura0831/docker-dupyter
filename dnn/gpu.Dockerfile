@@ -1,13 +1,11 @@
-ARG UBUNTU=18.04
+FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
 
-FROM ubuntu:${UBUNTU}
-
-ARG ANACONDA_VERSION=anaconda3-5.3.1
+ENV ANACONDA_VERSION anaconda3-5.3.1
 ENV PYENV_ROOT /opt/pyenv
-ENV PATH ${PYENV_ROOT}/bin:${PATH}
+ENV PATH ${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}
 
 RUN apt-get update && \
-  apt-get install -y wget git fonts-ipafont fonts-ipaexfont xvfb python-opengl && \
+  apt-get install -y wget git fonts-ipafont fonts-ipaexfont xvfb bzip2 python-opengl && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
@@ -22,19 +20,18 @@ RUN git clone https://github.com/yyuu/pyenv.git ${PYENV_ROOT} && \
   echo 'eval "$(pyenv init -)"' >> ${HOME}/.bashrc
 
 # install anaconda and jupyter library
-RUN eval "$(pyenv init -)" && \
-  pyenv install ${ANACONDA_VERSION} && \
+RUN pyenv install ${ANACONDA_VERSION} && \
   pyenv global ${ANACONDA_VERSION} && \
   conda update -n base conda && \
-  pip install environment_kernels && \
   jupyter notebook --generate-config
 
-# setup jupyter
-RUN echo "c.NotebookApp.kernel_spec_manager_class='environment_kernels.EnvironmentKernelSpecManager'" >> ${HOME}/.jupyter/jupyter_notebook_config.py && \
-  echo "c.EnvironmentKernelSpecManager.conda_env_dirs=['${PYENV_ROOT}/versions/${ANACONDA_VERSION}/envs']" >> ${HOME}/.jupyter/jupyter_notebook_config.py
+# install pip packages
+ADD ./requirements/base.requirements.txt /base.requirements.txt
+RUN pip install -r /base.requirements.txt
 
-ADD ./entrypoint.sh /entrypoint.sh
+ADD ./requirements/gpu.dnn.requirements.txt /dnn.requirements.txt
+RUN pip install -r /dnn.requirements.txt
 
 WORKDIR /workspace
-
-CMD ["/bin/bash", "/entrypoint.sh"]
+ADD ./scripts/entrypoint_jupyter.sh /entrypoint_jupyter.sh
+CMD ["/bin/bash", "/entrypoint_jupyter.sh"]
