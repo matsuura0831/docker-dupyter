@@ -34,9 +34,6 @@ RUN pip install -r /base.requirements.txt
 ADD ./requirements/cpu.dnn.requirements.txt /dnn.requirements.txt
 RUN pip install -r /dnn.requirements.txt
 
-ADD ./requirements/rl.requirements.txt /rl.requirements.txt
-RUN pip install -r /rl.requirements.txt
-
 WORKDIR /workspace
 ADD ./scripts/entrypoint_jupyter.sh /entrypoint_jupyter.sh
 CMD ["/bin/bash", "/entrypoint_jupyter.sh"]
