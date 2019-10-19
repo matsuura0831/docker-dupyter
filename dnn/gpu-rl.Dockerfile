@@ -1,4 +1,4 @@
-FROM matsuura0831/dupyter:cpu
+FROM matsuura0831/dupyter:gpu-dnn
 
 # install pip packages
 ADD ./requirements/rl.requirements.txt /rl.requirements.txt
