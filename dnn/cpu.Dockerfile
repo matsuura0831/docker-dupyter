@@ -23,6 +23,8 @@ RUN git clone https://github.com/yyuu/pyenv.git ${PYENV_ROOT} && \
 RUN pyenv install ${ANACONDA_VERSION} && \
   pyenv global ${ANACONDA_VERSION} && \
   conda update -n base conda && \
+  conda update --all && \
+  pip install --upgrade pip && \
   jupyter notebook --generate-config
 
 # install pip packages
