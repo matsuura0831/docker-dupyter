@@ -3,6 +3,7 @@ python-dotenv
 tqdm
 
 opencv-python
+scikit-image
 
 SQLAlchemy
 psycopg2-binary
