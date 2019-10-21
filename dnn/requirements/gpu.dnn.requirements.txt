@@ -1,0 +1,11 @@
+# TF
+tensorflow-gpu
+
+# keras
+keras
+pydot
+pydot_ng
+
+# pytorch
+torch
+torchvision
