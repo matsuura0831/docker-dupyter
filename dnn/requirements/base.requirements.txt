@@ -3,7 +3,7 @@ python-dotenv
 tqdm
 
 opencv-python
-scikit-image
+scikit-image==0.16.2
 
 SQLAlchemy
 psycopg2-binary
