@@ -70,7 +70,7 @@ case $MODE in
     echo "RUN"
     if [ $IS_RUNNING == 0 ]; then
       docker pull ${DOCKER_IMAGE}
-      docker run --rm -d -it ${FLAGS} ${DOCKER_IMAGE} /entrypoint.sh
+      docker run --rm -d -it ${FLAGS} ${DOCKER_IMAGE}
     fi
 
     if [ "${AUTH}" == "1" ]; then
