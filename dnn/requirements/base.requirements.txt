@@ -1,9 +1,30 @@
+tqdm
 docopt
 python-dotenv
-tqdm
+joblib
 
+jupyterlab
+
+pandas
+numpy
+scipy
+xlrd
+XlsxWriter
+
+matplotlib
+seaborn
+Pillow
 opencv-python
-scikit-image==0.16.2
+scikit-image
 
+requests
+#beautifulsoup4
+#lxml
+#selenium
+
+#Flask
+#Django
+
+PyMySQL
 SQLAlchemy
 psycopg2-binary
