@@ -6,12 +6,15 @@ ENV FONT_NAME IPAexGothic
 
 ENV PATH ${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}
 
+# install nodejs for jupyterlab
 RUN apt-get update && \
-  apt-get install -y build-essential wget git \
+  apt-get install -y build-essential curl git \
     fonts-ipafont fonts-ipaexfont \
     xvfb \
     libssl-dev libffi-dev libsqlite3-dev \
     python-opengl libsm6 libxrender1 && \
+  curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
+    apt-get install -y --no-install-recommends nodejs && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
@@ -40,6 +43,12 @@ RUN pip install -r /base.requirements.txt
 ADD ./requirements/cpu.dnn.requirements.txt /dnn.requirements.txt
 RUN pip install -r /dnn.requirements.txt && \
   pip install torch==1.4.0+cpu torchvision==0.5.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+
+# install jupyterlab extententions
+RUN jupyter labextension install @lckr/jupyterlab_variableinspector && \
+  jupyter labextension install @jupyterlab/toc && \
+  jupyter labextension install jupyterlab_vim && \
+  jupyter labextension install jupyterlab_tensorboard
 
 WORKDIR /workspace
 ADD ./scripts/entrypoint_jupyter.sh /entrypoint.sh

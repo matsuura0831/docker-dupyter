@@ -1,5 +1,7 @@
 # TF
 tensorflow
+tensorboard
+jupyter-tensorboard
 
 # keras
 keras
