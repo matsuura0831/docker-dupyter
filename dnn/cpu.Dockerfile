@@ -11,7 +11,7 @@ RUN apt-get update && \
   apt-get install -y build-essential curl git \
     fonts-ipafont fonts-ipaexfont \
     xvfb \
-    libssl-dev libffi-dev libsqlite3-dev \
+    libssl-dev libffi-dev libsqlite3-dev zlib1g-dev \
     libbz2-dev \
     python-opengl libsm6 libxrender1 && \
   apt-get clean && \
@@ -21,9 +21,6 @@ RUN apt-get update && \
 RUN mkdir -p $HOME/.config/matplotlib && \
   echo "font.family: ${FONT_NAME}" > ${HOME}/.config/matplotlib/matplotlibrc && \
   rm -f ${HOME}/.cache/matplotlib/fontList.cache
-
-RUN apt-get update
-RUN apt-get install -y zlib1g-dev
 
 # install pyenv and setting for `docker run bash`
 RUN git clone https://github.com/yyuu/pyenv.git ${PYENV_ROOT} && \
