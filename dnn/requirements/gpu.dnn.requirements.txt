@@ -1,5 +1,7 @@
 # TF
 tensorflow-gpu
+tensorboard
+jupyter-tensorboard
 
 # keras
 keras
@@ -9,3 +11,4 @@ pydot_ng
 # pytorch
 torch
 torchvision
+
