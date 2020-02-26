@@ -8,6 +8,7 @@ ENV PATH ${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}
 
 # install nodejs for jupyterlab
 RUN apt-get update && \
+  apt-get install -y tzdata && \
   apt-get install -y build-essential curl git \
     fonts-ipafont fonts-ipaexfont \
     xvfb \
