@@ -13,7 +13,7 @@ RUN apt-get update && \
     xvfb \
     libssl-dev libffi-dev libsqlite3-dev zlib1g-dev \
     libbz2-dev \
-    python-opengl libsm6 libxrender1 && \
+    libopencv-dev python-opengl libsm6 libxrender1 && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
