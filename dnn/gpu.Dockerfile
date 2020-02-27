@@ -6,6 +6,8 @@ ENV FONT_NAME IPAexGothic
 
 ENV PATH ${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 # install nodejs for jupyterlab
 RUN apt-get update && \
   apt-get install -y tzdata && \
