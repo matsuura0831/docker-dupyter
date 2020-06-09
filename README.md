@@ -1,2 +1,2 @@
-# docker-dupyter
-anaconda + jupyter
+# dupyter
+docker + jupyter
