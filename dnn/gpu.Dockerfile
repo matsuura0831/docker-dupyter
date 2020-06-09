@@ -39,9 +39,6 @@ RUN pyenv install ${PYENV_INSTALL_VERSION} && \
 ADD ./requirements/base.requirements.txt /base.requirements.txt
 RUN pip install -r /base.requirements.txt
 
-ADD ./requirements/gpu.dnn.requirements.txt /dnn.requirements.txt
-RUN pip install -r /dnn.requirements.txt
-
 # install nodejs for jupyterlab extentions
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
     apt-get install -y --no-install-recommends nodejs

@@ -1,6 +1,7 @@
 tqdm
 docopt
 python-dotenv
+PyYAML
 joblib
 
 jupyterlab
@@ -8,6 +9,9 @@ jupyterlab
 pandas
 numpy
 scipy
+scikit-learn
+statsmodel
+
 xlrd
 XlsxWriter
 

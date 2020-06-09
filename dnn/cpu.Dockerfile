@@ -37,10 +37,6 @@ RUN pyenv install ${PYENV_INSTALL_VERSION} && \
 ADD ./requirements/base.requirements.txt /base.requirements.txt
 RUN pip install -r /base.requirements.txt
 
-ADD ./requirements/cpu.dnn.requirements.txt /dnn.requirements.txt
-RUN pip install -r /dnn.requirements.txt && \
-  pip install torch==1.4.0+cpu torchvision==0.5.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
-
 # install nodejs for jupyterlab extentions
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
     apt-get install -y --no-install-recommends nodejs
