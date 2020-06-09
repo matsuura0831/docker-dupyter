@@ -8,17 +8,22 @@ ENV PATH ${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# install nodejs for jupyterlab
 RUN apt-get update && \
   apt-get install -y tzdata && \
   apt-get install -y build-essential curl git \
+    # for fonts
     fonts-ipafont fonts-ipaexfont \
+    # for matplotlib on jupyter
     xvfb \
-    libssl-dev libffi-dev libsqlite3-dev zlib1g-dev \
-    libbz2-dev \
+    # for pyenv
+    libssl-dev libffi-dev libsqlite3-dev zlib1g-dev libbz2-dev \
+    # for opencv
     libopencv-dev python-opengl libsm6 libxrender1 && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
+  # install nodejs for jupyterlab extentions
+  curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
+  apt-get install -y --no-install-recommends nodejs && \
+  # cleanup
+  apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # install ja fonts
 RUN mkdir -p $HOME/.config/matplotlib && \
@@ -39,16 +44,12 @@ RUN pyenv install ${PYENV_INSTALL_VERSION} && \
 ADD ./requirements/base.requirements.txt /base.requirements.txt
 RUN pip install -r /base.requirements.txt
 
-# install nodejs for jupyterlab extentions
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
-    apt-get install -y --no-install-recommends nodejs
-
 # install jupyterlab extententions
-RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
-  jupyter labextension install @lckr/jupyterlab_variableinspector && \
+RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
+RUN jupyter labextension install @lckr/jupyterlab_variableinspector && \
   jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
   jupyter labextension install @jupyterlab/toc && \
-  jupyter labextension install jupyterlab_vim && \
+#  jupyter labextension install jupyterlab_vim && \
   jupyter labextension install jupyterlab_tensorboard
 
 WORKDIR /workspace
