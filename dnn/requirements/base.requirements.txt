@@ -1,4 +1,6 @@
 tqdm
+ipywidgets
+
 docopt
 python-dotenv
 PyYAML

@@ -42,7 +42,9 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
     apt-get install -y --no-install-recommends nodejs
 
 # install jupyterlab extententions
-RUN jupyter labextension install @lckr/jupyterlab_variableinspector && \
+RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
+  jupyter labextension install @lckr/jupyterlab_variableinspector && \
+  jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
   jupyter labextension install @jupyterlab/toc && \
   jupyter labextension install jupyterlab_vim && \
   jupyter labextension install jupyterlab_tensorboard
